@@ -12,9 +12,11 @@ var seconds = 60
 var wordsArrayEnglish  = [  'apple',  'banana',  'orange',  'strawberry',  'grape',  'pear',  'mango',  'watermelon',  'pineapple',  'kiwi',  'lemon',  'lime',  'coconut',  'peach',  'apricot',  'plum',  'cherry',  'blackberry',  'raspberry',  'blueberry',  'huckleberry',  'boysenberry',  'elderberry',  'gooseberry',  'currant',  'cantaloupe',  'honeydew',  'fig',  'date',  'pomegranate'];
 var wordsArrayBosnian  = [  'jabuka',  'banana',  'naranča',  'jagoda',  'grožđe',  'kruška',  'mango',  'dinja',  'ananas',  'kiwi',  'limun',  'limeta',  'kokos',  'breskva',  'kajsija',  'šljiva',  'češnja',  'malina',  'malina',  'borovnica',  'huckleberry',  'boysenberry',  'bobica',  'kupina',  'kantalupa',  'medvjeđe grožđe',  'smokva',  'datulja',  'granat'];
 
+// Add the disabled attribute to the input element
+holder.setAttribute('disabled', true);
+holder.setAttribute('placeholder', 'Press start to begin typing');
 
-var wordsArray = wordsArrayEnglish;
-
+var countDownTimer = null;
 var wordsArray = wordsArrayEnglish;
 
 document.getElementById('english-button').addEventListener('click', function() {
@@ -22,8 +24,6 @@ document.getElementById('english-button').addEventListener('click', function() {
   languageSelector.style.display = 'none';
   game.style.display = 'block';
   updateWord();
-  countDown();
-  hint.innerHTML = "Press ENTER to confirm word"
 });
 
 document.getElementById('bosnian-button').addEventListener('click', function() {
@@ -31,8 +31,6 @@ document.getElementById('bosnian-button').addEventListener('click', function() {
   languageSelector.style.display = 'none';
   game.style.display = 'block';
   updateWord();
-  countDown();
-  hint.innerHTML = "Pritisni ENTER da potvrdis rijec"
 });
 
 holder.onkeyup = function() {
@@ -63,6 +61,35 @@ holder.onkeypress = function() {
   }
 }
 
+
+document.getElementById('restart-button').addEventListener('click', function() {
+  // Clear the countDownTimer interval
+  clearInterval(countDownTimer);
+  countDownTimer = null;
+
+  // Reset the seconds variable
+  seconds = 60;
+  
+  // Update the timer display
+  timer.innerHTML = seconds;
+  
+  // Reset the points and score display
+  points = 0;
+  score.innerHTML = points;
+  
+  // Clear the input field
+  holder.value = "";
+  
+  // Start the timer
+  countDown();
+});
+
+document.getElementById('start-button').addEventListener('click', function() {
+  holder.removeAttribute('disabled');
+  holder.removeAttribute('placeholder');
+  countDown();
+});
+
 function updateWord() {
   wordsArray.sort(function() {
     return 0.5 - Math.random();
@@ -70,28 +97,17 @@ function updateWord() {
   word.innerHTML = wordsArray[0];
 }
 
+
+
 function countDown() {
-  var countDownTimer = setInterval(function() {
-    seconds--;
-    timer.innerHTML = seconds;
-
-    if (seconds === 0) {
-      alert("Game over");
-      seconds = 60;
-      points = 0;
-      clearInterval(countDown);
-    }
-  }, 1000);
+  if (countDownTimer === null) {
+    countDownTimer = setInterval(function() {
+      seconds--;
+      timer.innerHTML = seconds;
+  
+      if (seconds === 0) {
+        clearInterval(countDownTimer);
+      }
+    }, 1000);
+  }
 }
-
-document.getElementById('restart-button').addEventListener('click', function() {
-    seconds = 60;
-    points = 0;
-    score.innerHTML = points
-    holder.value = "";
-    holder.classList.remove('incorrect');
-    holder.classList.remove('correct')
-    updateWord();
-    clearInterval(countDown);
-    countDown();
-  });
