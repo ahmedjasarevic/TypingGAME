@@ -5,10 +5,7 @@ body {
     align-items: center;
     justify-content: center;
   }
-  
-  .h1{
-    color:black;
-  }
+
   #timer, #word, #holder {
     text-align: center;
     color:black;

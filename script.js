@@ -1,6 +1,8 @@
 var timer = document.getElementById("timer");
 var word = document.getElementById("word");
 var holder = document.getElementById("holder");
+var languageSelector = document.getElementById("language-selector");
+var game = document.getElementById("game");
 
 var points = 0
 var seconds = 60
@@ -11,30 +13,35 @@ var wordsArrayBosnian  = [  'jabuka',  'banana',  'naranča',  'jagoda',  'grož
 var wordsArray = wordsArrayEnglish;
 
 document.getElementById('english-button').addEventListener('click', function() {
-  wordsArray = wordsArrayEnglish;
-  updateWord();
-});
+    wordsArray = wordsArrayEnglish;
+    languageSelector.style.display = 'none';
+    game.style.display = 'block';
+    updateWord();
+    countDown();
+  });
 
-document.getElementById('bosnian-button').addEventListener('click', function() {
-  wordsArray = wordsArrayBosnian;
-  updateWord();
-});
+  document.getElementById('bosnian-button').addEventListener('click', function() {
+    wordsArray = wordsArrayBosnian;
+    languageSelector.style.display = 'none';
+    game.style.display = 'block';
+    updateWord();
+    countDown();
+  });
 
-function updateWord() {
-  wordsArray.sort(function(){return 0.5 - Math.random()});
-  word.innerHTML = wordsArray[0];
-}
+  function updateWord() {
+    wordsArray.sort(function(){return 0.5 - Math.random()});
+    word.innerHTML = wordsArray[0];
+  }
 
-updateWord();
+  holder.onkeypress = function(){
+      if(holder.value == word.innerHTML){
+          wordsArray.sort(function(){return 0.5 - Math.random()});
+          word.innerHTML = wordsArray[0];
+          points++;
+          holder.value = "";
+      }
+  }
 
-holder.onkeypress = function(){
-    if(holder.value == word.innerHTML){
-        wordsArray.sort(function(){return 0.5 - Math.random()});
-        word.innerHTML = wordsArray[0];
-        points++;
-        holder.value = "";
-    }
-}
 
 function countDown(){
     points = 0;
@@ -47,7 +54,7 @@ function countDown(){
             alert("Game over");
             seconds = 60;
             points = 0;
-            clearInterval(countDownTimer);
+            clearInterval(countDown);
         }
 
     }, 1000);
